@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Study Planner - Jadwal</title>
+    <link rel="stylesheet" href="style.css" />
+    <style>
+      /* ── Modal ─────────────────────────────────── */
+      .modal-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.45);
+        z-index: 1000;
+        align-items: center;
+        justify-content: center;
+      }
+      .modal-box {
+        background: white;
+        border-radius: 12px;
+        padding: 28px;
+        width: 100%;
+        max-width: 460px;
+        box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+      }
+      .modal-box h2   { font-size: 18px; margin-bottom: 20px; }
+      .modal-box .form-group { margin-bottom: 14px; }
+      .modal-box label {
+        display: block;
+        font-size: 13px;
+        font-weight: 600;
+        margin-bottom: 6px;
+      }
+      .modal-box input,
+      .modal-box select {
+        width: 100%;
+        padding: 10px 12px;
+        border: 1px solid #dbe2ef;
+        border-radius: 7px;
+        outline: none;
+        font-size: 14px;
+      }
+      .modal-actions {
+        display: flex;
+        gap: 10px;
+        justify-content: flex-end;
+        margin-top: 20px;
+      }
+      .btn-cancel {
+        background: white;
+        border: 1px solid #dbe2ef;
+        padding: 10px 18px;
+        border-radius: 7px;
+        cursor: pointer;
+        font-weight: 600;
+      }
+      .btn-save {
+        background: #2454d6;
+        color: white;
+        border: none;
+        padding: 10px 18px;
+        border-radius: 7px;
+        cursor: pointer;
+        font-weight: 600;
+      }
+      .btn-save:hover { background: #1943b7; }
+
+      /* ── Jadwal Hari Ini ────────────────────────── */
+      #today-count { color: #2454d6; }
+
+      #today-list .schedule-card {
+        margin-bottom: 12px;
+        position: relative;
+      }
+      #today-list .schedule-card .card-actions {
+        position: absolute;
+        top: 16px;
+        right: 16px;
+        display: flex;
+        gap: 8px;
+        opacity: 0;
+        transition: opacity .2s;
+      }
+      #today-list .schedule-card:hover .card-actions { opacity: 1; }
+
+      /* ── Tabel Mingguan ─────────────────────────── */
+      .schedule-row { align-items: center; }
+      .schedule-row .row-actions {
+        display: flex;
+        gap: 6px;
+        justify-content: flex-end;
+        opacity: 0;
+        transition: opacity .2s;
+      }
+      .schedule-row:hover .row-actions { opacity: 1; }
+
+      .btn-icon {
+        background: none;
+        border: 1px solid #dbe2ef;
+        border-radius: 6px;
+        padding: 4px 8px;
+        cursor: pointer;
+        font-size: 12px;
+        color: #64748b;
+      }
+      .btn-icon:hover { background: #f1f5f9; color: #1e293b; }
+      .btn-icon.del   { border-color: #fecaca; color: #dc2626; }
+      .btn-icon.del:hover { background: #fef2f2; }
+
+      /* ── Filter hari ──────────────────────────── */
+      .day-filter {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-bottom: 16px;
+      }
+      .day-chip {
+        padding: 6px 14px;
+        border-radius: 20px;
+        border: 1px solid #dbe2ef;
+        background: white;
+        font-size: 13px;
+        cursor: pointer;
+        color: #64748b;
+        transition: .2s;
+      }
+      .day-chip:hover    { border-color: #2454d6; color: #2454d6; }
+      .day-chip.active   { background: #2454d6; color: white; border-color: #2454d6; }
+
+      /* ── Empty state ──────────────────────────── */
+      .empty-state {
+        text-align: center;
+        padding: 32px 0;
+        color: #94a3b8;
+        font-size: 14px;
+      }
+    </style>
+  </head>
+
+  <body data-page="jadwal">
+    <div class="app">
+      <!-- SIDEBAR -->
+      <aside class="sidebar">
+        <div class="logo">
+          <span>✎</span>
+          Study Planner
+        </div>
+
+        <nav class="menu">
+          <a href="index.html" class="menu-item">
+            <span>▣</span>
+            Dashboard
+          </a>
+          <a href="tugas.html" class="menu-item">
+            <span>✓</span>
+            Tugas
+          </a>
+          <a href="jadwal.html" class="menu-item active">
+            <span>▣</span>
+            Jadwal
+          </a>
+          <a href="pengaturan.html" class="menu-item">
+            <span>⚙</span>
+            Pengaturan
+          </a>
+        </nav>
+      </aside>
+
+      <!-- MAIN -->
+      <main class="main-content">
+        <header class="topbar">
+          <div>
+            <h1>Jadwal</h1>
+            <p>Jadwal kuliah mingguan</p>
+          </div>
+          <button class="primary-button" onclick="openJadwalModal()">
+            + Tambah Jadwal
+          </button>
+        </header>
+
+        <!-- JADWAL HARI INI -->
+        <div class="day-title">
+          <h2>Hari ini (<span id="today-count">0</span> kelas)</h2>
+        </div>
+
+        <div id="today-list">
+          <!-- diisi JS -->
+        </div>
+
+        <!-- SEMUA JADWAL MINGGUAN -->
+        <div style="display:flex;justify-content:space-between;align-items:center;margin:28px 0 14px">
+          <h2 class="section-title" style="margin:0">Semua Jadwal Mingguan</h2>
+        </div>
+
+        <!-- Filter hari -->
+        <div class="day-filter">
+          <button class="day-chip active" onclick="filterHari('semua', this)">Semua</button>
+          <button class="day-chip" onclick="filterHari('Senin', this)">Senin</button>
+          <button class="day-chip" onclick="filterHari('Selasa', this)">Selasa</button>
+          <button class="day-chip" onclick="filterHari('Rabu', this)">Rabu</button>
+          <button class="day-chip" onclick="filterHari('Kamis', this)">Kamis</button>
+          <button class="day-chip" onclick="filterHari('Jumat', this)">Jumat</button>
+          <button class="day-chip" onclick="filterHari('Sabtu', this)">Sabtu</button>
+        </div>
+
+        <div class="weekly-schedule" id="weekly-list">
+          <!-- diisi JS -->
+        </div>
+      </main>
+    </div>
+
+    <!-- ── MODAL TAMBAH / EDIT JADWAL ─────────── -->
+    <div class="modal-overlay" id="jadwal-modal">
+      <div class="modal-box">
+        <h2 id="jadwal-modal-title">Tambah Jadwal</h2>
+        <input type="hidden" id="jadwal-id-input" />
+
+        <div class="form-group">
+          <label>Nama Mata Kuliah</label>
+          <input type="text" id="jadwal-nama-input" placeholder="Contoh: Pemrograman Web" />
+        </div>
+
+        <div class="form-group">
+          <label>Hari</label>
+          <select id="jadwal-hari-input">
+            <option value="Senin">Senin</option>
+            <option value="Selasa">Selasa</option>
+            <option value="Rabu">Rabu</option>
+            <option value="Kamis">Kamis</option>
+            <option value="Jumat">Jumat</option>
+            <option value="Sabtu">Sabtu</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Jam Mulai</label>
+          <input type="time" id="jadwal-mulai-input" />
+        </div>
+
+        <div class="form-group">
+          <label>Jam Selesai</label>
+          <input type="time" id="jadwal-selesai-input" />
+        </div>
+
+        <div class="form-group">
+          <label>Ruangan</label>
+          <input type="text" id="jadwal-ruang-input" placeholder="Contoh: Ruang Lab Komputer" />
+        </div>
+
+        <div class="modal-actions">
+          <button class="btn-cancel" onclick="closeJadwalModal()">Batal</button>
+          <button class="btn-save"   onclick="saveJadwal()">Simpan</button>
+        </div>
+      </div>
+    </div>
+
+    <script src="js/script.js"></script>
+  </body>
+</html>

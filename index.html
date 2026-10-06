@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Study Planner - Dashboard</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+
+  <body data-page="dashboard">
+    <div class="app">
+      <!-- SIDEBAR -->
+      <aside class="sidebar">
+        <div class="logo">
+          <span>✎</span>
+          Study Planner
+        </div>
+
+        <nav class="menu">
+          <a href="index.html" class="menu-item active">
+            <span>▣</span>
+            Dashboard
+          </a>
+
+          <a href="tugas.html" class="menu-item">
+            <span>✓</span>
+            Tugas
+          </a>
+
+          <a href="jadwal.html" class="menu-item">
+            <span>▣</span>
+            Jadwal
+          </a>
+
+          <a href="pengaturan.html" class="menu-item">
+            <span>⚙</span>
+            Pengaturan
+          </a>
+        </nav>
+      </aside>
+
+      <!-- MAIN CONTENT -->
+      <main class="main-content">
+        <header class="topbar">
+          <div>
+            <h1>Dashboard</h1>
+            <p id="topbar-date"></p>
+          </div>
+        </header>
+
+        <!-- WELCOME -->
+        <section class="welcome-card">
+          <div>
+            <p>Selamat datang, <span id="welcome-name">PUTRA</span> 👋</p>
+            <h2>Tetap semangat dan selesaikan tugasmu hari ini!</h2>
+            <button onclick="showMessage()">Lihat Tugas</button>
+          </div>
+        </section>
+
+        <!-- STATISTICS -->
+        <section class="stats">
+          <div class="stat-card">
+            <span class="stat-icon blue">✓</span>
+            <div>
+              <p>Total Tugas</p>
+              <h3 id="stat-total">—</h3>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <span class="stat-icon purple">✓</span>
+            <div>
+              <p>Tugas Selesai</p>
+              <h3 id="stat-done">—</h3>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <span class="stat-icon green">▣</span>
+            <div>
+              <p>Jadwal Hari Ini</p>
+              <h3 id="stat-jadwal">—</h3>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <span class="stat-icon red">!</span>
+            <div>
+              <p>Terlambat</p>
+              <h3 id="stat-late">—</h3>
+            </div>
+          </div>
+        </section>
+
+        <!-- DASHBOARD GRID -->
+        <section class="dashboard-grid">
+          <!-- TUGAS -->
+          <div class="content-card">
+            <div class="card-header">
+              <h3>Tugas Terdekat</h3>
+              <a href="tugas.html">Lihat Semua</a>
+            </div>
+            <div id="dashboard-tasks">
+              <!-- diisi oleh JS -->
+            </div>
+          </div>
+
+          <!-- JADWAL -->
+          <div class="content-card">
+            <div class="card-header">
+              <h3>Jadwal Hari Ini</h3>
+              <a href="jadwal.html">Lihat Semua</a>
+            </div>
+            <div id="dashboard-jadwal">
+              <!-- diisi oleh JS -->
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script src="js/script.js"></script>
+    <script>
+      // Tampilkan tanggal hari ini
+      const opts = { weekday:'long', year:'numeric', month:'long', day:'numeric' };
+      document.getElementById('topbar-date').textContent =
+        new Date().toLocaleDateString('id-ID', opts);
+    </script>
+  </body>
+</html>

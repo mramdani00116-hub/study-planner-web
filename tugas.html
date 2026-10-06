@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Study Planner - Tugas</title>
+    <link rel="stylesheet" href="style.css" />
+    <style>
+      /* Modal overlay */
+      .modal-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.45);
+        z-index: 1000;
+        align-items: center;
+        justify-content: center;
+      }
+      .modal-overlay.active { display: flex; }
+      .modal-box {
+        background: white;
+        border-radius: 12px;
+        padding: 28px;
+        width: 100%;
+        max-width: 460px;
+        box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+      }
+      .modal-box h2 {
+        font-size: 18px;
+        margin-bottom: 20px;
+      }
+      .modal-box .form-group { margin-bottom: 14px; }
+      .modal-box label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; }
+      .modal-box input,
+      .modal-box select {
+        width: 100%;
+        padding: 10px 12px;
+        border: 1px solid #dbe2ef;
+        border-radius: 7px;
+        outline: none;
+        font-size: 14px;
+      }
+      .modal-actions {
+        display: flex;
+        gap: 10px;
+        justify-content: flex-end;
+        margin-top: 20px;
+      }
+      .btn-cancel {
+        background: white;
+        border: 1px solid #dbe2ef;
+        padding: 10px 18px;
+        border-radius: 7px;
+        cursor: pointer;
+        font-weight: 600;
+      }
+      .btn-save {
+        background: #2454d6;
+        color: white;
+        border: none;
+        padding: 10px 18px;
+        border-radius: 7px;
+        cursor: pointer;
+        font-weight: 600;
+      }
+      .btn-save:hover { background: #1943b7; }
+    </style>
+  </head>
+
+  <body data-page="tugas">
+    <div class="app">
+      <!-- SIDEBAR -->
+      <aside class="sidebar">
+        <div class="logo">
+          <span>✎</span>
+          Study Planner
+        </div>
+
+        <nav class="menu">
+          <a href="index.html" class="menu-item">
+            <span>▣</span>
+            Dashboard
+          </a>
+
+          <a href="tugas.html" class="menu-item active">
+            <span>✓</span>
+            Tugas
+          </a>
+
+          <a href="jadwal.html" class="menu-item">
+            <span>▣</span>
+            Jadwal
+          </a>
+
+          <a href="pengaturan.html" class="menu-item">
+            <span>⚙</span>
+            Pengaturan
+          </a>
+        </nav>
+      </aside>
+
+      <!-- CONTENT -->
+      <main class="main-content">
+        <header class="topbar">
+          <div>
+            <h1>Tugas</h1>
+            <p>Kelola semua tugas kuliah dan deadline-mu.</p>
+          </div>
+
+          <button class="primary-button" onclick="addTask()">
+            + Tambah Tugas
+          </button>
+        </header>
+
+        <div class="filter-box">
+          <input
+            type="text"
+            id="searchTask"
+            placeholder="Cari tugas..."
+            oninput="searchTask()"
+          />
+
+          <select id="filter-status" onchange="filterTask()">
+            <option value="all">Semua Status</option>
+            <option value="pending">Belum Selesai</option>
+            <option value="completed">Selesai</option>
+          </select>
+        </div>
+
+        <section class="task-list" id="task-list">
+          <!-- diisi oleh JS -->
+        </section>
+      </main>
+    </div>
+
+    <!-- MODAL TAMBAH / EDIT TUGAS -->
+    <div class="modal-overlay" id="task-modal">
+      <div class="modal-box">
+        <h2 id="modal-title">Tambah Tugas</h2>
+        <input type="hidden" id="task-id-input" />
+
+        <div class="form-group">
+          <label>Nama Tugas</label>
+          <input type="text" id="task-name-input" placeholder="Contoh: Membuat laporan..." />
+        </div>
+
+        <div class="form-group">
+          <label>Mata Kuliah</label>
+          <input type="text" id="task-subject-input" placeholder="Contoh: Pemrograman Web" />
+        </div>
+
+        <div class="form-group">
+          <label>Deadline</label>
+          <input type="date" id="task-deadline-input" />
+        </div>
+
+        <div class="form-group">
+          <label>Status</label>
+          <select id="task-status-input">
+            <option value="pending">Belum Selesai</option>
+            <option value="completed">Selesai</option>
+          </select>
+        </div>
+
+        <div class="modal-actions">
+          <button class="btn-cancel" onclick="closeModal()">Batal</button>
+          <button class="btn-save"   onclick="saveTask()">Simpan</button>
+        </div>
+      </div>
+    </div>
+
+    <script src="js/script.js"></script>
+  </body>
+</html>
